@@ -1,0 +1,46 @@
+div{
+    border: 2px solid red;
+    
+}
+.main
+{
+    display: flex;
+    justify-content: center;
+}
+.calculatorBody{
+    display: flex;
+    flex-wrap: wrap;
+    min-height: 350px;
+    width:300px;
+    border: 1px solid greenyellow;
+    
+}
+.header{
+    display: flex;
+    justify-content: center;
+}
+.button{
+    height:87.5px;
+    width: 75px;
+}
+.display{
+    display: flex;
+    justify-content: center;
+}
+.display > * {
+    height:58px;
+    width:300px;
+    border: solid 2px black;    
+}
+
+body{
+    min-height: 100vh;
+    width: 100%;
+    border: 2px solid red;
+}
+
+#display
+{
+    font-size:23px;
+    
+}
