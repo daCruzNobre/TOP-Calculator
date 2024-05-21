@@ -25,10 +25,15 @@ function divide(numberOne, numberTwo) {
     return numberOne / numberTwo;
 };
 
-function getOperation() {  
-    operationResult = operate(numberOne, numberTwo, operator);
-    console.log(operationResult);
-    display.textContent = operationResult;
+function getOperation() { 
+    if(numberOne === undefined){
+        display.textContent = display.textContent
+    }else{
+        operationResult = operate(numberOne, numberTwo, operator);
+        console.log(operationResult);
+        display.textContent = operationResult;
+
+    }
     };
 
 function operate(numberOne, numberTwo, operator) {
@@ -47,6 +52,7 @@ function operate(numberOne, numberTwo, operator) {
             result = divide(numberOne, numberTwo);
             break;
     }
+    result = result = Math.round(result * 100) / 100;
     return result;
 };
 
@@ -78,7 +84,9 @@ numberButtons.forEach((numberButton) => {
 // event listener for the symbol buttons
 operatorButtons.forEach((operatorButton) => {
     operatorButton.addEventListener("click", () => {
-        if(numberOne === undefined){
+        if(typeof numberOne === "number" && numberTwo === undefined){
+            display.textContent = display.textContent;
+        }else if(numberOne === undefined){
             numberOne = Number(display.textContent);
             operator = operatorButton.textContent;
             console.log(numberOne);
@@ -92,8 +100,7 @@ operatorButtons.forEach((operatorButton) => {
             isOperation = true;
             console.log(numberOne);
             console.log(numberTwo);
-            console.log(operator);
-            
+            console.log(operator);            
         }else if(isOperation === true){           
             getOperation();            
             operator = operatorButton.textContent;
