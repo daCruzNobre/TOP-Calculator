@@ -4,6 +4,9 @@ const operatorButtons = document.querySelectorAll(".operator");
 const display = document.querySelector("#display");
 const clearBtn = document.querySelector(".clear");
 const resultBtn = document.querySelector(".result");
+const signBtn = document.querySelector(".sign");
+const backspaceBtn = document.querySelector(".backspace");
+const pageBody = document.querySelector("body");
 
 // Variable Declarations
 let numberOne;
@@ -25,16 +28,50 @@ function divide(numberOne, numberTwo) {
     return numberOne / numberTwo;
 };
 
-function getOperation() { 
-    if(numberOne === undefined){
-        display.textContent = display.textContent
-    }else{
-        operationResult = operate(numberOne, numberTwo, operator);
-        console.log(operationResult);
-        display.textContent = operationResult;
-
+function getNumberValue(event) {
+    let numberButtonText;
+    event.type === "click" ? numberButtonText = event.target.textContent : numberButtonText = event.key;
+    if (operator === undefined && numberTwo === undefined) {
+        display.textContent = display.textContent + numberButtonText;
     }
+    if (operator !== undefined && numberTwo === undefined) {
+        display.textContent = "";
+        display.textContent = numberButtonText;
+        numberTwo = Number(display.textContent);
+    } else if (typeof numberTwo === "number") {
+        display.textContent = display.textContent + numberButtonText;
+        numberTwo = display.textContent
     };
+}
+
+function getOperatorValue(event) {
+    let operatorButtonText;
+    event.type === "click" ? operatorButtonText = event.target.textContent : operatorButtonText = event.key;
+    if (typeof numberOne === "number" && numberTwo === undefined) {
+        display.textContent = display.textContent;
+    } else if (numberOne === undefined) {
+        numberOne = Number(display.textContent);
+        operator = operatorButtonText;
+    } else if (typeof numberOne === "number" && typeof numberTwo === "number") {
+        getOperation();
+        numberOne = operationResult;
+        numberTwo = undefined;
+        operator = operatorButtonText;
+        isOperation = true;
+    } else if (isOperation === true) {
+        getOperation();
+        operator = operatorButtonText;
+    }
+}
+
+function getOperation() {
+    if (numberOne === undefined) {
+        display.textContent = display.textContent
+    } else {
+        operationResult = operate(numberOne, numberTwo, operator);
+        display.textContent = operationResult;
+    }
+};
 
 function operate(numberOne, numberTwo, operator) {
     let result;
@@ -58,76 +95,71 @@ function operate(numberOne, numberTwo, operator) {
 
 // event listener for the number buttons
 numberButtons.forEach((numberButton) => {
-    numberButton.addEventListener("click", () => {
-        if (operator === undefined && numberTwo === undefined) {
-            display.textContent = display.textContent + numberButton.textContent;
-        }
-        if (operator !== undefined && numberTwo === undefined) {
-            display.textContent = "";
-            display.textContent = numberButton.textContent;
-            numberTwo = Number(display.textContent);
-            console.log(numberOne);
-            console.log(numberTwo);
-            console.log(operator);
-            
-        } else if (typeof numberTwo === "number") {
-            display.textContent = display.textContent + numberButton.textContent;
-            numberTwo = display.textContent
-            console.log(numberOne);
-            console.log(numberTwo);
-            console.log(operator);
-            
-        };
-    })
+    numberButton.addEventListener("click", getNumberValue)
 });
 
 // event listener for the symbol buttons
 operatorButtons.forEach((operatorButton) => {
-    operatorButton.addEventListener("click", () => {
-        if(typeof numberOne === "number" && numberTwo === undefined){
-            display.textContent = display.textContent;
-        }else if(numberOne === undefined){
-            numberOne = Number(display.textContent);
-            operator = operatorButton.textContent;
-            console.log(numberOne);
-            console.log(numberTwo);
-            console.log(operator);
-        }else if(typeof numberOne === "number" && typeof numberTwo==="number"){
-            getOperation();
-            numberOne = operationResult;
-            numberTwo = undefined;
-            operator = operatorButton.textContent;
-            isOperation = true;
-            console.log(numberOne);
-            console.log(numberTwo);
-            console.log(operator);            
-        }else if(isOperation === true){           
-            getOperation();            
-            operator = operatorButton.textContent;
-            // display.textContent = result;
-            // numberOne = result;
-            console.log(numberOne);
-            console.log(numberTwo);
-            console.log(operator);
-        }
-    })
+    operatorButton.addEventListener("click", getOperatorValue)
 });
 
-clearBtn.addEventListener("click", () => {
-    display.textContent = "";
+clearBtn.addEventListener("click", clear);
+
+resultBtn.addEventListener("click", getResult);
+
+signBtn.addEventListener("click", () => {
+    if (numberOne === undefined || numberOne === "") {
+        numberOne = Number(display.textContent);
+    }
+    numberOne *= -1;
+    display.textContent = numberOne;
     numberOne = undefined;
-    numberTwo = undefined;
-    operator = undefined;
 });
 
-resultBtn.addEventListener("click", () =>{
-    if(numberOne === undefined || numberTwo === undefined){
-       display.textContent = display.textContent; 
-    } else{
+backspaceBtn.addEventListener("click", backspace)
+
+pageBody.addEventListener("keypress", (keyevent) => {
+    if (!isNaN(Number(keyevent.key))) {
+        getNumberValue(keyevent);
+    } else if (keyevent.key === "+" ||
+        keyevent.key === "-" ||
+        keyevent.key === "+/-" ||
+        keyevent.key === "÷" ||
+        keyevent.key === "." ||
+        keyevent.key === "x" ||
+        keyevent.key === "="
+    ) {
+        getOperatorValue(keyevent);
+    } else if(keyevent.key === "Delete") {        
+        clear();
+    }
+});
+pageBody.addEventListener("keyup", (keyevent) => {
+    if (keyevent.key === "Backspace"){
+        backspace();
+    }
+});
+
+function getResult() {
+    if (numberOne === undefined || numberTwo === undefined) {
+        display.textContent = display.textContent;
+    } else {
         getOperation();
         numberOne = undefined;
         numberTwo = undefined;
         operator = undefined;
-
     }
-});
+};
+
+function clear(){
+    display.textContent = "";
+    numberOne = undefined;
+    numberTwo = undefined;
+    operator = undefined;
+}
+
+function backspace(){
+    let text = display.textContent;
+    display.textContent = text.slice(0, text.length - 1);
+}
+    
