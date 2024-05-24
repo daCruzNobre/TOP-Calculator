@@ -6,6 +6,7 @@ const clearBtn = document.querySelector(".clear");
 const resultBtn = document.querySelector(".result");
 const signBtn = document.querySelector(".sign");
 const backspaceBtn = document.querySelector(".backspace");
+const dotBtn = document.querySelector(".dot");
 const pageBody = document.querySelector("body");
 
 // Variable Declarations
@@ -118,24 +119,30 @@ signBtn.addEventListener("click", () => {
 
 backspaceBtn.addEventListener("click", backspace)
 
+dotBtn.addEventListener("click", addFloat)
+
 pageBody.addEventListener("keypress", (keyevent) => {
     if (!isNaN(Number(keyevent.key))) {
         getNumberValue(keyevent);
     } else if (keyevent.key === "+" ||
         keyevent.key === "-" ||
         keyevent.key === "+/-" ||
-        keyevent.key === "÷" ||
-        keyevent.key === "." ||
-        keyevent.key === "x" ||
-        keyevent.key === "="
-    ) {
+        keyevent.key === "÷" ||        
+        keyevent.key === "x"        
+    ) {        
         getOperatorValue(keyevent);
-    } else if(keyevent.key === "Delete") {        
+    } else if(keyevent.key === "="){
+        getResult();        
+    }
+     else if (keyevent.key === "Delete") {
         clear();
     }
-});
+     else if (keyevent.key === ".") {
+        addFloat();
+    }
+    });
 pageBody.addEventListener("keyup", (keyevent) => {
-    if (keyevent.key === "Backspace"){
+    if (keyevent.key === "Backspace") {
         backspace();
     }
 });
@@ -145,21 +152,33 @@ function getResult() {
         display.textContent = display.textContent;
     } else {
         getOperation();
+        console.log(numberOne);
+        console.log(numberTwo);
+        console.log(operator);
         numberOne = undefined;
         numberTwo = undefined;
         operator = undefined;
     }
 };
 
-function clear(){
+function clear() {
     display.textContent = "";
     numberOne = undefined;
     numberTwo = undefined;
     operator = undefined;
 }
 
-function backspace(){
+function backspace() {
     let text = display.textContent;
     display.textContent = text.slice(0, text.length - 1);
 }
-    
+
+function addFloat(){
+    let text = display.textContent;
+    isFloat = text.includes(".");
+    if(!isFloat){
+        display.textContent = text + ".";        
+    } else{
+        text = text;
+    }
+}

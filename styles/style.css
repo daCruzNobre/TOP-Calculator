@@ -2,6 +2,12 @@ div{
     border: 2px solid red;
     
 }
+.backspace, .operator, .clear, .sign, .result{
+    background-color: aliceblue;
+}
+.dot,.symbol{
+    background-color: blueviolet;
+}
 .main
 {
     display: flex;
@@ -43,4 +49,8 @@ body{
 {
     font-size:23px;
     
+}
+
+.result{
+    flex-grow: 1;
 }
